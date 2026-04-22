@@ -16,44 +16,42 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
   --income:#4361ee;--expense:#ff5c7c;--fixed:#0d0f1a;--savings:#00b894;
   --border:#e4e8f5;--shadow:0 2px 14px rgba(67,97,238,0.09);
 }
-.app{width:100%;height:100%;max-width:430px;margin:0 auto;background:var(--bg2);position:relative;overflow:hidden}
+
+/* ── 레이아웃 ── */
+.app{
+  width:100%;height:100%;max-width:430px;
+  margin:0 auto;
+  background:var(--bg2);
+  /* position:relative 반드시 — FAB 기준점 */
+  position:relative;
+  overflow:hidden;
+}
 .main{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;transition:filter 0.3s ease}
 .main.blurred{filter:blur(3px) brightness(0.85)}
 
-/* 헤더 */
+/* ── 헤더 ── */
 .header{padding:env(safe-area-inset-top,44px) 20px 12px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0}
 .month-nav{display:flex;align-items:center;gap:4px}
 .month-title{font-size:24px;font-weight:700;color:var(--text);cursor:pointer;padding:2px 4px;border-radius:8px}
 .month-title:hover{background:var(--bg3)}
 .nav-btn{font-size:14px;color:var(--text3);padding:4px 8px;border-radius:6px;transition:color 0.15s,background 0.15s}
 .nav-btn.active{color:var(--blue);background:var(--bg3)}
-
-/* 우측 상단 아이콘 — SVG 스타일 */
 .header-icons{display:flex;align-items:center;gap:2px}
-.hicon{
-  width:36px;height:36px;
-  border-radius:10px;
-  color:var(--text2);
-  display:inline-flex;align-items:center;justify-content:center;
-  transition:background 0.15s;
-}
+.hicon{width:36px;height:36px;border-radius:10px;color:var(--text2);display:inline-flex;align-items:center;justify-content:center;transition:background 0.15s}
 .hicon:hover{background:var(--bg3)}
 .hicon svg{width:20px;height:20px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* 대시보드 */
+/* ── 대시보드 ── */
 .summary{margin:0 16px 10px;background:var(--bg);border-radius:18px;padding:12px 6px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:var(--shadow);flex-shrink:0}
-.sum-item{text-align:center;cursor:pointer;padding:4px 2px;border-radius:10px;position:relative;-webkit-tap-highlight-color:transparent;outline:none}
+.sum-item{text-align:center;cursor:pointer;padding:4px 2px;border-radius:10px;position:relative;outline:none;-webkit-tap-highlight-color:transparent}
 .sum-item:focus{outline:none}
 .sum-item:not(:last-child)::after{content:'';position:absolute;right:0;top:15%;height:70%;width:1px;background:var(--border)}
 .sum-item:active{background:var(--bg2)}
 .sum-label{font-size:10px;color:var(--text3);margin-bottom:3px;font-weight:500}
 .sum-value{font-size:11px;font-weight:700}
-.sum-value.income{color:var(--income)}
-.sum-value.expense{color:var(--expense)}
-.sum-value.fixed{color:var(--fixed)}
-.sum-value.savings{color:var(--savings)}
+.sum-value.income{color:var(--income)}.sum-value.expense{color:var(--expense)}.sum-value.fixed{color:var(--fixed)}.sum-value.savings{color:var(--savings)}
 
-/* 캘린더 */
+/* ── 캘린더 ── */
 .cal-card{margin:0 16px 16px;background:var(--bg);border-radius:18px;padding:12px 10px;box-shadow:var(--shadow);flex:1;display:flex;flex-direction:column;min-height:0}
 .cal-header{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;flex-shrink:0}
 .cal-day-name{text-align:center;font-size:11px;font-weight:600;color:var(--text3);padding:2px 0}
@@ -64,66 +62,79 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 .cal-cell.today .date-num{background:var(--blue);color:#fff;border-radius:50%}
 .date-num{font-size:12px;color:var(--text);width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:500}
 .date-num.sun{color:var(--expense)}.date-num.sat{color:var(--blue)}
-/* 달력 금액 가독성 개선 */
 .cell-amount{font-size:9px;text-align:center;margin-top:3px;line-height:1.5;font-weight:600}
 .cell-amount .neg{color:var(--expense)}.cell-amount .pos{color:var(--income)}
 
-/* FAB */
-.fab{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:6;box-shadow:0 4px 20px rgba(67,97,238,0.4)}
-.detail-fab{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:13;box-shadow:0 4px 20px rgba(67,97,238,0.4);display:none}
+/* ── FAB ── */
+/* .app 기준 absolute. z-index는 backdrop(10)보다 낮게 — 시트 닫혔을 때만 보임 */
+.fab{
+  position:absolute;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 44px);
+  right:20px;
+  width:52px;height:52px;
+  background:var(--blue);border-radius:50%;
+  color:#fff;font-size:28px;
+  z-index:3;
+  box-shadow:0 4px 20px rgba(67,97,238,0.4);
+}
+/* 세부내역 시트 열릴 때만 표시되는 FAB — sheet(11)보다 높게 */
+.detail-fab{
+  position:absolute;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 44px);
+  right:20px;
+  width:52px;height:52px;
+  background:var(--blue);border-radius:50%;
+  color:#fff;font-size:28px;
+  z-index:13;
+  box-shadow:0 4px 20px rgba(67,97,238,0.4);
+  display:none;
+}
 .detail-fab.visible{display:inline-flex}
 
+/* ── 배경 레이어 ── */
 .dash-dim{position:absolute;top:0;left:0;right:0;height:130px;background:rgba(240,242,248,0);z-index:9;pointer-events:none;transition:background 0.3s ease}
 .dash-dim.active{background:rgba(240,242,248,0.6)}
 .backdrop{display:none;position:absolute;inset:0;background:rgba(13,15,26,0.3);z-index:10}
 .backdrop.open{display:block}
 
-/* 바텀시트 */
+/* ── 바텀시트 ── */
 .sheet{position:absolute;bottom:-110%;left:0;right:0;background:var(--bg);border-radius:24px 24px 0 0;z-index:11;transition:bottom 0.35s cubic-bezier(0.32,0.72,0,1);min-height:70%}
 .sheet.open{bottom:0}
-.sheet-inner{padding:0 20px calc(env(safe-area-inset-bottom,0px)+80px);overflow-y:auto;max-height:75vh}
+/* sheet-inner: 좌우 24px — 버튼/필드가 모서리에 닿지 않게 */
+.sheet-inner{padding:0 24px calc(env(safe-area-inset-bottom,0px)+80px);overflow-y:auto;max-height:75vh}
 .sheet-top{padding:18px 0 0}
 .handle{width:40px;height:4px;background:var(--bg3);border-radius:2px;margin:0 auto 18px}
 .title-row{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:20px}
 .back-btn{position:absolute;left:0;font-size:22px;color:var(--blue);display:none;line-height:1}
 .sheet-title{font-size:17px;font-weight:600;color:var(--text);text-align:center}
 
-/* 스와이프 수정/삭제 — 좌우 여백 개선 */
+/* ── 스와이프 수정/삭제 ── */
 .tx-wrap{position:relative;overflow:hidden;border-bottom:1px solid var(--bg3)}
 .tx-wrap:last-child{border-bottom:none}
 .tx-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch}
-.tx-action-btn{
-  display:flex;align-items:center;justify-content:center;
-  width:80px; /* 여백 늘림 */
-  font-size:14px;font-weight:600;
-  color:#fff;cursor:pointer;flex-shrink:0;
-  letter-spacing:-0.3px;
-}
+.tx-action-btn{display:flex;align-items:center;justify-content:center;width:76px;font-size:14px;font-weight:600;color:#fff;cursor:pointer;flex-shrink:0}
 .tx-action-btn.edit{background:#4361ee}
 .tx-action-btn.del{background:#ff5c7c}
-.tx-item{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 0; /* 상하 여백 늘림 */
-  cursor:pointer;background:var(--bg);
-  position:relative;transition:transform 0.25s ease;will-change:transform;
-}
+.tx-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;background:var(--bg);position:relative;transition:transform 0.25s ease;will-change:transform}
 .tx-left{display:flex;align-items:center;gap:12px}
 .tx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .tx-dot.income{background:var(--income)}.tx-dot.expense{background:var(--expense)}.tx-dot.fixed_expense{background:var(--fixed)}.tx-dot.savings{background:var(--savings)}
 .tx-desc{font-size:14px;font-weight:500;color:var(--text)}
 .tx-cat{font-size:11px;color:var(--text3);margin-top:2px}
-.tx-amount{font-size:14px;font-weight:600;white-space:nowrap;margin-left:12px} /* 금액 왼쪽 여백 */
+.tx-amount{font-size:14px;font-weight:600;white-space:nowrap;margin-left:8px}
 .tx-amount.expense{color:var(--expense)}.tx-amount.income{color:var(--income)}.tx-amount.savings{color:var(--savings)}.tx-amount.fixed_expense{color:var(--fixed)}
 
-.type-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
-.type-tab{padding:10px 2px;border:1.5px solid var(--border);border-radius:12px;font-size:12px;text-align:center;color:var(--text2);font-weight:500;transition:all 0.15s}
+/* ── 입력 폼 ── */
+.type-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.type-tab{padding:11px 4px;border:1.5px solid var(--border);border-radius:12px;font-size:12px;text-align:center;color:var(--text2);font-weight:500;transition:all 0.15s}
 .type-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.form-group{margin-bottom:14px}
-.form-label{font-size:12px;color:var(--text3);font-weight:500;margin-bottom:6px;display:block}
-.form-group select,.form-group input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:var(--bg2);color:var(--text)}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--text3);font-weight:500;margin-bottom:7px;display:block}
+.form-group select,.form-group input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:var(--bg2);color:var(--text)}
 .form-group select:focus,.form-group input:focus{border-color:var(--blue);background:var(--bg)}
-.submit-btn{width:100%;padding:16px;background:var(--blue);color:#fff;border-radius:14px;font-size:16px;font-weight:600;box-shadow:0 4px 16px rgba(67,97,238,0.3);margin-top:6px;text-align:center;display:block}
+.submit-btn{width:100%;padding:16px;background:var(--blue);color:#fff;border-radius:14px;font-size:16px;font-weight:600;box-shadow:0 4px 16px rgba(67,97,238,0.3);margin-top:8px;text-align:center;display:block}
 
+/* ── 통계 ── */
 .stat-bar-item{margin-bottom:14px;cursor:pointer;padding:8px;border-radius:12px;transition:background 0.15s}
 .stat-bar-item:hover{background:var(--bg3)}
 .stat-row{display:flex;justify-content:space-between;margin-bottom:6px;align-items:center}
@@ -135,35 +146,47 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 .stat-total{text-align:right;font-size:13px;color:var(--text2);margin-top:16px;padding-top:14px;border-top:1px solid var(--bg3)}
 .stat-total span{color:var(--expense);font-weight:600}
 
+/* ── 수정 시트 ── */
 .edit-sheet{position:absolute;bottom:-110%;left:0;right:0;background:var(--bg);border-radius:24px 24px 0 0;z-index:22;transition:bottom 0.35s cubic-bezier(0.32,0.72,0,1);min-height:55%}
 .edit-sheet.open{bottom:0}
-.edit-inner{padding:18px 20px calc(env(safe-area-inset-bottom,0px)+36px);overflow-y:auto;max-height:70vh}
+.edit-inner{padding:18px 24px calc(env(safe-area-inset-bottom,0px)+36px);overflow-y:auto;max-height:70vh}
 
-/* 검색 — 좌우 여백 충분히 */
+/* ── 검색 — 좌우 여백 충분히 ── */
 .search-overlay{display:none;position:absolute;inset:0;background:var(--bg);z-index:15;flex-direction:column}
 .search-overlay.open{display:flex}
-.search-bar{display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,44px)+20px) 24px 16px;flex-shrink:0}
-.search-input{flex:1;min-width:0;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:var(--bg2);color:var(--text)}
+.search-bar{
+  display:flex;align-items:center;gap:12px;
+  padding:calc(env(safe-area-inset-top,44px)+20px) 24px 16px;
+  flex-shrink:0;
+}
+.search-input{flex:1;min-width:0;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:var(--bg2);color:var(--text)}
 .search-input:focus{border-color:var(--blue);background:var(--bg)}
 .search-cancel{font-size:15px;color:var(--blue);white-space:nowrap;font-weight:500;flex-shrink:0}
+/* 검색 결과: 좌우 24px — tx-item이 화면 끝에 닿지 않게 */
 .search-results{flex:1;overflow-y:auto;padding:0 24px 20px}
 .search-empty{text-align:center;color:var(--text3);font-size:13px;padding:60px 0}
 
-/* 월 선택 — 좌우 여백 + 크기 개선 */
+/* ── 월 선택 바텀시트 ── */
 .month-picker{
   position:absolute;bottom:-110%;left:0;right:0;
   background:var(--bg);border-radius:24px 24px 0 0;
   z-index:11;
   transition:bottom 0.35s cubic-bezier(0.32,0.72,0,1);
-  min-height:50%;
-  /* 좌우 여백 충분히 */
-  padding:0 32px calc(env(safe-area-inset-bottom,0px)+36px);
+  min-height:48%;
 }
 .month-picker.open{bottom:0}
-.month-picker-top{padding:18px 0 0}
-/* 한 줄에 3개 */
-.month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
-.month-btn{padding:20px 0;border-radius:14px;font-size:16px;font-weight:500;color:var(--text2);background:var(--bg2);text-align:center;transition:all 0.15s}
+.month-picker-inner{
+  /* 좌우 32px — 버튼이 화면 끝에서 충분히 떨어지게 */
+  padding:18px 32px calc(env(safe-area-inset-bottom,0px)+32px);
+}
+/* 한 줄에 3개, 버튼 간격 충분히 */
+.month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.month-btn{
+  padding:18px 0;border-radius:14px;
+  font-size:16px;font-weight:500;
+  color:var(--text2);background:var(--bg2);
+  text-align:center;transition:all 0.15s;
+}
 .month-btn.current{background:var(--blue);color:#fff;font-weight:700}
 .month-btn:active{opacity:0.8}
 
@@ -182,15 +205,12 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
         <button class="nav-btn" id="nextM">›</button>
       </div>
       <div class="header-icons">
-        <!-- 돋보기 -->
         <button class="hicon" id="searchBtn" title="검색">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
         </button>
-        <!-- 통계 (차트) -->
         <button class="hicon" id="statsBtn" title="통계">
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </button>
-        <!-- 홈/캘린더 -->
         <button class="hicon" id="navHome" title="오늘">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </button>
@@ -214,12 +234,14 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
     </div>
   </div>
 
+  <!-- FAB: .app 직계 자식, .main 밖에 위치 -->
   <button class="fab" id="fabBtn">+</button>
   <button class="detail-fab" id="detailFabBtn">+</button>
 
   <div class="dash-dim" id="dashDim"></div>
   <div class="backdrop" id="backdrop"></div>
 
+  <!-- 세부 내역 -->
   <div class="sheet" id="detailSheet">
     <div class="sheet-inner">
       <div class="sheet-top">
@@ -233,6 +255,7 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
     </div>
   </div>
 
+  <!-- 내역 기록 -->
   <div class="sheet" id="addSheet">
     <div class="sheet-inner">
       <div class="sheet-top">
@@ -256,6 +279,7 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
     </div>
   </div>
 
+  <!-- 통계 -->
   <div class="sheet" id="statsSheet">
     <div class="sheet-inner">
       <div class="sheet-top">
@@ -266,6 +290,7 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
     </div>
   </div>
 
+  <!-- 수정 시트 -->
   <div class="edit-sheet" id="editSheet">
     <div class="edit-inner">
       <div class="sheet-top">
@@ -284,14 +309,16 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 
   <div class="backdrop" id="editBackdrop" style="z-index:19;display:none"></div>
 
+  <!-- 월 선택 — inner div로 좌우 여백 제어 -->
   <div class="month-picker" id="monthPicker">
-    <div class="month-picker-top">
+    <div class="month-picker-inner">
       <div class="handle"></div>
       <div class="title-row"><div class="sheet-title" id="monthPickerTitle"></div></div>
+      <div class="month-grid" id="monthGrid"></div>
     </div>
-    <div class="month-grid" id="monthGrid"></div>
   </div>
 
+  <!-- 검색 -->
   <div class="search-overlay" id="searchOverlay">
     <div class="search-bar">
       <input class="search-input" id="searchInput" placeholder="내역 검색...">
@@ -369,14 +396,9 @@ function renderCal(){
       const inc=dayTx.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
       const out=dayTx.filter(t=>t.type!=='income').reduce((s,t)=>s+t.amount,0);
       const a=document.createElement('div');a.className='cell-amount';
-      // 금액 가독성 — 단위 축약 (10만 이상이면 '만' 단위)
-      const fmtShort=n=>{
-        if(n>=100000)return (n/10000).toFixed(0)+'만';
-        if(n>=10000)return (n/10000).toFixed(1)+'만';
-        return n.toLocaleString('ko-KR');
-      };
-      if(inc){const s=document.createElement('div');s.className='pos';s.textContent='+'+fmtShort(inc);a.appendChild(s);}
-      if(out){const s=document.createElement('div');s.className='neg';s.textContent='-'+fmtShort(out);a.appendChild(s);}
+      // 금액을 그대로 쉼표 형식으로 표기
+      if(inc){const s=document.createElement('div');s.className='pos';s.textContent='+'+inc.toLocaleString('ko-KR');a.appendChild(s);}
+      if(out){const s=document.createElement('div');s.className='neg';s.textContent='-'+out.toLocaleString('ko-KR');a.appendChild(s);}
       c.appendChild(a);
     }
     let tSX=0,tSY=0,tMoved=false;
@@ -396,7 +418,8 @@ function setBlur(on){
 
 function showDetailFab(show){
   document.getElementById('detailFabBtn').classList.toggle('visible',show);
-  document.getElementById('fabBtn').style.display=show?'none':'inline-flex';
+  // 홈 FAB는 시트 열릴 때 backdrop 뒤로 가서 자연스럽게 가려짐
+  // display 조작 없이 z-index로만 처리
 }
 
 function openSheet(id,fromSheet=null){
@@ -425,7 +448,7 @@ function makeTxList(txList,listEl){
   if(!txList.length){listEl.innerHTML='<div class="empty-msg">내역이 없어요</div>';return;}
   listEl.innerHTML='';
   let openedItem=null;
-  const SNAP=160; // 수정(80)+삭제(80)
+  const SNAP=152;
   txList.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
     const wrap=document.createElement('div');wrap.className='tx-wrap';
     const actions=document.createElement('div');actions.className='tx-actions';
@@ -659,47 +682,39 @@ document.getElementById('mainScreen').addEventListener('touchend',e=>{
   }
 },{passive:true});
 
-// 바텀시트 드래그 닫기 — 부드러운 spring 애니메이션
+// 바텀시트 드래그 닫기 — 부드러운 spring
 document.querySelectorAll('.sheet,.month-picker').forEach(sheet=>{
-  let sy=0,dragging=false,dy=0,lastDy=0,lastTime=0,velocity=0;
-
+  let sy=0,dragging=false,dy=0,velocity=0,lastY=0,lastTime=0;
   sheet.addEventListener('touchstart',e=>{
     if(e.target.closest('.tx-item,.tx-action-btn,.type-tab,.submit-btn,.form-group,.month-btn,.back-btn'))return;
     const inner=e.target.closest('.sheet-inner');
     if(inner&&inner.scrollTop>0)return;
-    sy=e.touches[0].clientY;dy=0;lastDy=0;velocity=0;
+    sy=e.touches[0].clientY;dy=0;velocity=0;lastY=sy;lastTime=Date.now();
     dragging=true;
-    lastTime=Date.now();
-    // 드래그 중 transition 끄기
     sheet.style.transition='none';
     sheet.style.bottom='0';
   },{passive:true});
-
   sheet.addEventListener('touchmove',e=>{
     if(!dragging)return;
     const d=e.touches[0].clientY-sy;
     if(d>0){
       const now2=Date.now();
-      velocity=(d-lastDy)/(now2-lastTime+1)*16; // px/frame
-      lastDy=dy; lastTime=now2;
+      velocity=(e.touches[0].clientY-lastY)/(now2-lastTime+1)*16;
+      lastY=e.touches[0].clientY;lastTime=now2;
       dy=d;
-      // 저항감: 제곱근으로 댐핑
       const dampedD=Math.sqrt(d)*4.5;
       sheet.style.bottom=(-dampedD)+'px';
     }
   },{passive:true});
-
   sheet.addEventListener('touchend',()=>{
     if(!dragging)return;
     dragging=false;
-    // 빠르게 내리거나(velocity>2) 충분히 내렸으면(dy>100) 닫기
     if(dy>100||velocity>2){
       sheet.style.transition='bottom 0.35s cubic-bezier(0.32,0.72,0,1)';
       sheet.style.bottom='';
       if(sheet.classList.contains('month-picker')){closeMonthPicker();}
       else{closeAll();}
-    } else {
-      // 원위치 — 부드럽게 스프링 복귀
+    }else{
       sheet.style.transition='bottom 0.4s cubic-bezier(0.34,1.56,0.64,1)';
       sheet.style.bottom='0';
       sheet.addEventListener('transitionend',()=>{sheet.style.transition='';sheet.style.bottom='';},{once:true});
