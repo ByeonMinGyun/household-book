@@ -15,14 +15,15 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
   --blue:#4361ee;--text:#0d0f1a;--text2:#5a607a;--text3:#9ba3bf;
   --income:#4361ee;--expense:#ff5c7c;--fixed:#0d0f1a;--savings:#00b894;
   --border:#e4e8f5;--shadow:0 2px 14px rgba(67,97,238,0.09);
-  --pad:32px; /* 전역 좌우 여백 변수 */
+  --pad:28px; /* 바텀시트 내부 좌우 여백 */
+  --card-margin:16px; /* 달력/대시보드 카드 좌우 마진 — 화면 꽉 차게 */
 }
 .app{width:100%;height:100%;max-width:430px;margin:0 auto;background:var(--bg2);position:relative;overflow:hidden}
 .main{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;transition:filter 0.3s ease}
 .main.blurred{filter:blur(3px) brightness(0.85)}
 
 /* 헤더 */
-.header{padding:env(safe-area-inset-top,44px) var(--pad) 12px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0}
+.header{padding:env(safe-area-inset-top,44px) var(--card-margin) 12px;display:flex;align-items:center;justify-content:space-between;background:var(--bg2);flex-shrink:0}
 .month-nav{display:flex;align-items:center;gap:4px}
 .month-title{font-size:24px;font-weight:700;color:var(--text);cursor:pointer;padding:2px 4px;border-radius:8px}
 .month-title:hover{background:var(--bg3)}
@@ -34,7 +35,7 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 .hicon svg{width:20px;height:20px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* 대시보드 */
-.summary{margin:0 var(--pad) 10px;background:var(--bg);border-radius:18px;padding:12px 6px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:var(--shadow);flex-shrink:0}
+.summary{margin:0 var(--card-margin) 10px;background:var(--bg);border-radius:18px;padding:12px 6px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:var(--shadow);flex-shrink:0}
 .sum-item{text-align:center;cursor:pointer;padding:4px 2px;border-radius:10px;position:relative;outline:none;-webkit-tap-highlight-color:transparent}
 .sum-item:focus{outline:none}
 .sum-item:not(:last-child)::after{content:'';position:absolute;right:0;top:15%;height:70%;width:1px;background:var(--border)}
@@ -44,7 +45,7 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 .sum-value.income{color:var(--income)}.sum-value.expense{color:var(--expense)}.sum-value.fixed{color:var(--fixed)}.sum-value.savings{color:var(--savings)}
 
 /* 캘린더 */
-.cal-card{margin:0 var(--pad) var(--pad);background:var(--bg);border-radius:18px;padding:12px 10px;box-shadow:var(--shadow);flex:1;display:flex;flex-direction:column;min-height:0}
+.cal-card{margin:0 var(--card-margin) var(--card-margin);background:var(--bg);border-radius:18px;padding:12px 10px;box-shadow:var(--shadow);flex:1;display:flex;flex-direction:column;min-height:0}
 .cal-header{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;flex-shrink:0}
 .cal-day-name{text-align:center;font-size:11px;font-weight:600;color:var(--text3);padding:2px 0}
 .cal-day-name.sun{color:var(--expense)}.cal-day-name.sat{color:var(--blue)}
@@ -58,9 +59,10 @@ html,body{height:100%;font-family:'Pretendard',sans-serif;background:#f0f2f8;ove
 .cell-amount .neg{color:var(--expense)}.cell-amount .pos{color:var(--income)}
 
 /* FAB */
-/* FAB — fixed로 변경: overflow:hidden에 영향받지 않음 */
-.fab{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:3;box-shadow:0 4px 20px rgba(67,97,238,0.4)}
-.detail-fab{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:13;box-shadow:0 4px 20px rgba(67,97,238,0.4);display:none}
+/* FAB — fixed + z-index를 backdrop(10)보다 높게 설정해서 항상 보이게 */
+.fab{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:12;box-shadow:0 4px 20px rgba(67,97,238,0.4)}
+.fab.hidden{display:none}
+.detail-fab{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+44px);right:20px;width:52px;height:52px;background:var(--blue);border-radius:50%;color:#fff;font-size:28px;z-index:14;box-shadow:0 4px 20px rgba(67,97,238,0.4);display:none}
 .detail-fab.visible{display:inline-flex}
 
 .dash-dim{position:absolute;top:0;left:0;right:0;height:130px;background:rgba(240,242,248,0);z-index:9;pointer-events:none;transition:background 0.3s ease}
@@ -368,6 +370,7 @@ function setBlur(on){
 
 function showDetailFab(show){
   document.getElementById('detailFabBtn').classList.toggle('visible',show);
+  document.getElementById('fabBtn').classList.toggle('hidden',show);
 }
 
 function openSheet(id,fromSheet=null){
