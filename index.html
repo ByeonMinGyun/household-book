@@ -50,7 +50,7 @@ a{text-decoration:none;color:inherit}
 #tabBar{
   position:absolute;bottom:0;left:0;right:0;
   background:var(--card);border-top:1px solid var(--border);
-  display:flex;padding-bottom:var(--safe-bot);z-index:50;flex-shrink:0;
+  display:flex;padding-bottom:calc(var(--safe-bot) + 4px);z-index:50;flex-shrink:0;
 }
 .tab-item{
   flex:1;display:flex;flex-direction:column;align-items:center;
@@ -62,7 +62,7 @@ a{text-decoration:none;color:inherit}
 .tab-item.active span{color:var(--blue)}
 
 /* ─── SCROLLABLE CONTENT AREA ──────────────────────────────── */
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bot) + 80px)}
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bot) + 90px)}
 .scroll-area::-webkit-scrollbar{display:none}
 
 /* ─── CARDS ────────────────────────────────────────────────── */
@@ -1329,7 +1329,7 @@ function openAddSheet(editTx=null, fromDate=null){
   addFromDaySheet = !!fromDate;
   addType = editTx?editTx.type:'expense';
   addAmountStr = editTx?String(editTx.amount):'0';
-  addCat = editTx?editTx.category:(CATS[addType]?.[0]||'기타');
+  addCat = editTx?editTx.category:'';
   document.getElementById('addSheetTitle').textContent = editTx?'거래 수정':'거래 추가';
   document.getElementById('addSheetBack').style.display = addFromDaySheet?'block':'none';
   document.getElementById('addDate').value = editTx?editTx.date:(fromDate||today());
@@ -1342,13 +1342,15 @@ function openAddSheet(editTx=null, fromDate=null){
     });
     document.getElementById('amountTypeTag').className=`amount-type-tag ${addType}`;
     document.getElementById('amountTypeTag').textContent=TYPE_NAMES[addType];
-    const hidePayment=['income','fixed_expense','savings'];
-    document.getElementById('drPayment').style.display=hidePayment.includes(addType)?'none':'flex';
+    document.getElementById('drPayment').style.display='none';
   } else {
     updateTypeUI(); // 새 거래는 기본 카테고리로 설정
   }
   updateAmountUI(); updateCatUI();
   openSheet('addSheet');
+  // 스크롤 항상 최상단으로 초기화
+  const addScroll = document.querySelector('#addSheet .sheet-scroll');
+  if(addScroll) addScroll.scrollTop = 0;
 }
 document.getElementById('addSheetBack').addEventListener('click',()=>{closeSheet('addSheet');});
 document.getElementById('fab').addEventListener('click',()=>openAddSheet(null,null));
@@ -1359,9 +1361,8 @@ function updateTypeUI(){
   document.getElementById('amountTypeTag').className=`amount-type-tag ${addType}`;
   document.getElementById('amountTypeTag').textContent=TYPE_NAMES[addType];
 
-  addCat=CATS[addType]?.[0]||'기타'; updateCatUI();
-  const hidePayment=['income','fixed_expense','savings'];
-  document.getElementById('drPayment').style.display=hidePayment.includes(addType)?'none':'flex';
+  addCat=''; updateCatUI();
+  document.getElementById('drPayment').style.display='none'; // 모든 타입에서 결제수단 숨김
 }
 function updateAmountUI(){
   const n=parseInt(addAmountStr)||0;
@@ -1369,9 +1370,17 @@ function updateAmountUI(){
   document.getElementById('addSubmitBtn').disabled=n===0;
 }
 function updateCatUI(){
-  document.getElementById('drCatVal').textContent=addCat;
-  document.getElementById('drCatIcon').textContent=CAT_EMOJI[addCat]||'📌';
-  document.getElementById('drCatIcon').style.background=(CAT_COLOR[addCat]||'#ccc')+'22';
+  if(!addCat){
+    document.getElementById('drCatVal').textContent='선택';
+    document.getElementById('drCatVal').style.color='var(--t4)';
+    document.getElementById('drCatIcon').textContent='📋';
+    document.getElementById('drCatIcon').style.background='var(--bg2)';
+  } else {
+    document.getElementById('drCatVal').textContent=addCat;
+    document.getElementById('drCatVal').style.color='var(--t2)';
+    document.getElementById('drCatIcon').textContent=CAT_EMOJI[addCat]||'📌';
+    document.getElementById('drCatIcon').style.background=(CAT_COLOR[addCat]||'#ccc')+'22';
+  }
 }
 document.querySelectorAll('#typeSelector .type-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{addType=btn.dataset.type;updateTypeUI();updateAmountUI();});
@@ -1405,6 +1414,7 @@ function openCatPicker(){
 document.getElementById('addSubmitBtn').addEventListener('click', async()=>{
   const amount=parseInt(addAmountStr)||0;
   if(!amount){showToast('금액을 입력해주세요');return;}
+  if(!addCat){showToast('카테고리를 선택해주세요');return;}
   const date=document.getElementById('addDate').value;
   if(!date){showToast('날짜를 선택해주세요');return;}
   const memo=document.getElementById('addMemo').value.trim();
