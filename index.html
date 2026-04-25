@@ -899,16 +899,30 @@ function apiHeaders(extra={}) {
   return h;
 }
 async function apiFetch(path, opts={}) {
-  const r = await fetch(SUPA_URL+path, {...opts, headers:apiHeaders(opts.headers||{})});
-  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+  const url = SUPA_URL+path;
+  const headers = apiHeaders(opts.headers||{});
+  let r;
+  try {
+    r = await fetch(url, {...opts, headers});
+  } catch(networkErr) {
+    console.error('[Supabase] 네트워크 오류:', networkErr);
+    showToast('네트워크 오류 — 인터넷 연결 확인');
+    throw networkErr;
+  }
+  if (!r.ok) {
+    const errText = await r.text();
+    console.error('[Supabase] API 오류', r.status, errText, '\nURL:', url);
+    showToast(`Supabase 오류 ${r.status}: ${errText.slice(0,60)}`);
+    throw new Error(errText);
+  }
   const ct = r.headers.get('content-type')||'';
   if (ct.includes('json') && r.status!==204) return r.json();
   return null;
 }
 async function loadTxs() {
   if (isDemoMode) return;
-  const uid = currentUser?.user?.id;
-  if (!uid) return;
+  // user_id 컬럼으로 필터 (로그인 없이 anon key 사용 시 'solo' 고정값)
+  const uid = currentUser?.user?.id || 'solo';
   const data = await apiFetch(`/rest/v1/transactions?user_id=eq.${uid}&order=date.desc&limit=2000`);
   txs = data || [];
 }
@@ -1402,7 +1416,7 @@ document.getElementById('addSubmitBtn').addEventListener('click', async()=>{
       await updateTx(addingTxId,{type:addType,amount,category:addCat,memo:memo||null,date,payment_method:payment});
       showToast('✓ 수정되었습니다');
     }else{
-      const uid=isDemoMode?'demo':currentUser?.user?.id||'demo';
+      const uid=isDemoMode?'demo':(currentUser?.user?.id||'solo');
       await saveTx({user_id:uid,type:addType,amount,category:addCat,memo:memo||null,date,payment_method:payment});
       showToast('✓ 기록되었습니다');
     }
@@ -1661,7 +1675,7 @@ function renderRecurring(){
 window.applyRecurring=async function(id){
   const r=recurringList.find(x=>x.id===id); if(!r)return;
   try{
-    const uid=isDemoMode?'demo':currentUser?.user?.id||'demo';
+    const uid=isDemoMode?'demo':(currentUser?.user?.id||'solo');
     await saveTx({user_id:uid,type:r.type,amount:r.amount,category:r.category,memo:r.memo,date:today(),payment_method:'transfer'});
     r.lastApplied=today(); saveRecurring();
     renderHome(); renderRecurring(); showToast('✓ 거래가 적용되었습니다');
@@ -1923,7 +1937,7 @@ document.getElementById('importDoBtn').addEventListener('click',async()=>{
   if(!importedRows.length)return;
   const btn=document.getElementById('importDoBtn');btn.disabled=true;btn.textContent='가져오는 중...';
   try{
-    const uid=isDemoMode?'demo':currentUser?.user?.id||'demo';
+    const uid=isDemoMode?'demo':(currentUser?.user?.id||'solo');
     for(const row of importedRows){ await saveTx({...row,user_id:uid}); }
     closeSheet('importSheet'); renderHome(); showToast(`✓ ${importedRows.length}건 가져오기 완료`);
   }catch(e){showToast('가져오기 실패: '+e.message);}
@@ -1939,7 +1953,8 @@ document.getElementById('resetData').addEventListener('click',async()=>{
   else{
     try{
       const uid=currentUser?.user?.id;
-      if(uid) await apiFetch(`/rest/v1/transactions?user_id=eq.${uid}`,{method:'DELETE'});
+      const delUid=currentUser?.user?.id||'solo';
+      await apiFetch(`/rest/v1/transactions?user_id=eq.${delUid}`,{method:'DELETE'});
       txs=[];renderHome();showToast('초기화 완료');
     }catch(e){showToast('초기화 실패');}
   }
@@ -1953,20 +1968,28 @@ function renderAll(){ renderHome(); }
 async function init(){
   loadLocal();
   loadCatsFromStorage();
-  // No login required - load data directly
-  const saved=localStorage.getItem('mb_session');
-  if(saved){
-    try{
-      const sess=JSON.parse(saved);
-      const payload=JSON.parse(atob(sess.access_token.split('.')[1]));
-      if(payload.exp*1000>Date.now()){
-        currentUser=sess;
-        await loadTxs();
-      }
-    }catch(e){}
+
+  // Supabase 키가 설정되어 있으면 실제 모드로 동작
+  const supabaseConfigured = SUPA_URL.indexOf('YOUR_PROJECT_ID') === -1 && SUPA_KEY.indexOf('YOUR_ANON_KEY') === -1;
+
+  if(supabaseConfigured){
+    isDemoMode = false;
+    // anon key를 직접 사용 (로그인 없이 개인 가계부)
+    currentUser = { access_token: SUPA_KEY };
+    try {
+      await loadTxs();
+      showToast('✓ Supabase 연결됨');
+    } catch(e) {
+      console.error('Supabase 연결 실패:', e);
+      isDemoMode = true;
+      loadDemoData();
+      showToast('Supabase 연결 실패 — 데모 모드로 시작');
+    }
+  } else {
+    // 키가 없으면 데모 모드
+    isDemoMode = true;
+    loadDemoData();
   }
-  // Always load local/demo data and go straight to app
-  if(!txs.length){ isDemoMode=true; loadDemoData(); }
   renderAll();
 }
 init();
