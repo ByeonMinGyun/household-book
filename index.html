@@ -1068,11 +1068,34 @@ backdrop.addEventListener('click', closeAllSheets);
 // Sheet drag-to-close
 // 핸들 바 뿐만 아니라 시트 상단 전체에서 아래로 드래그하면 닫힘
 document.querySelectorAll('.sheet').forEach(sheet=>{
-  let sy=0, dy=0, vel=0, ly=0, lt=0, active=false;
+  let sx=0, sy=0, dy=0, vel=0, ly=0, lt=0;
+  let active=false;    // 드래그 닫기 활성 여부
+  let decided=false;   // 방향 결정 여부 (수평 vs 수직)
+  let isHorizontal=false; // 수평 스와이프 중이면 드래그 닫기 차단
 
   function onMove(e){
-    if(!active) return;
+    const cx=e.touches[0].clientX;
     const cy=e.touches[0].clientY;
+
+    // 아직 방향 결정 전: 첫 이동으로 수평/수직 판단
+    if(!decided){
+      const absDx=Math.abs(cx-sx);
+      const absDy=Math.abs(cy-sy);
+      if(absDx<6 && absDy<6) return; // 아직 충분히 안 움직임
+      decided=true;
+      isHorizontal = absDx > absDy; // 수평이 더 크면 수평 스와이프
+      if(isHorizontal){
+        // 수평 스와이프 → 드래그 닫기 취소
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onEnd);
+        return;
+      }
+      // 수직 스와이프 → 드래그 닫기 활성
+      active=true;
+      sheet.style.transition='none';
+    }
+
+    if(!active) return;
     const d=cy-sy;
     if(d>0){
       const now2=Date.now();
@@ -1085,10 +1108,10 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
   }
 
   function onEnd(){
-    if(!active) return;
-    active=false;
     document.removeEventListener('touchmove', onMove);
     document.removeEventListener('touchend', onEnd);
+    if(!active){ decided=false; isHorizontal=false; return; }
+    active=false; decided=false; isHorizontal=false;
     if(dy>80||vel>2.5){
       sheet.style.transition='transform 0.36s cubic-bezier(0.32,0.72,0,1)';
       sheet.style.transform='translateY(105%)';
@@ -1108,18 +1131,19 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
   sheet.addEventListener('touchstart',e=>{
     if(!sheet.classList.contains('open')) return;
 
-    // 스크롤 가능한 영역(sheet-scroll)에서는 최상단일 때만 드래그 허용
+    // 스크롤 가능한 영역은 최상단일 때만 허용
     const scrollEl = sheet.querySelector('.sheet-scroll');
     if(scrollEl && scrollEl.contains(e.target)){
-      if(scrollEl.scrollTop > 0) return; // 스크롤 중이면 드래그 닫기 비활성
+      if(scrollEl.scrollTop > 0) return;
     }
 
-    // 입력 요소(input, select, textarea, button)에서는 드래그 시작 안 함
+    // 입력 요소에서는 시작 안 함
     if(e.target.closest('input,select,textarea,button,.kkey,.type-btn,.chip,.cat-sort-item')) return;
 
-    sy=e.touches[0].clientY; dy=0; vel=0; ly=sy; lt=Date.now();
-    active=true;
-    sheet.style.transition='none';
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+    dy=0; vel=0; ly=sy; lt=Date.now();
+    active=false; decided=false; isHorizontal=false;
+
     document.addEventListener('touchmove', onMove, {passive:true});
     document.addEventListener('touchend', onEnd, {once:true});
   },{passive:true});
