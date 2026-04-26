@@ -143,10 +143,12 @@ a{text-decoration:none;color:inherit}
 }
 .cal-num.sun{color:var(--red)}.cal-num.sat{color:var(--blue)}
 .cal-cell.today .cal-num{background:var(--blue);color:#fff;font-weight:700}
-.cal-amounts{text-align:center;margin-top:2px;line-height:1.5;overflow:hidden}
+.cal-amounts{text-align:center;margin-top:2px;line-height:1.45;overflow:hidden}
 .ca-exp{font-size:9.5px;font-weight:700;color:var(--red);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .ca-inc{font-size:9.5px;font-weight:700;color:var(--blue);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.ca-fix{font-size:9.5px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .ca-sav{font-size:9.5px;font-weight:700;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.cal-amounts.small .ca-exp,.cal-amounts.small .ca-inc,.cal-amounts.small .ca-fix,.cal-amounts.small .ca-sav{font-size:7.5px}
 
 /* ─── FAB ──────────────────────────────────────────────────── */
 .fab{
@@ -200,7 +202,7 @@ a{text-decoration:none;color:inherit}
 }
 .tx-act.edit{background:var(--blue)}.tx-act.del{background:var(--red)}
 .tx-row{
-  display:flex;align-items:center;gap:12px;padding:13px 0;
+  display:flex;align-items:center;gap:0;padding:14px 0;
   background:var(--card);position:relative;
   transition:transform 0.25s ease;will-change:transform;cursor:pointer;
 }
@@ -369,7 +371,7 @@ a{text-decoration:none;color:inherit}
 .chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .search-empty{text-align:center;padding:60px 0;color:var(--t3);font-size:14px}
 .search-hint{text-align:center;padding:60px 24px;color:var(--t3);font-size:14px;line-height:1.7}
-.search-hint .hint-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
+.search-hint .hint-icon{margin-bottom:12px;display:flex;justify-content:center}
 
 /* ─── MORE / SETTINGS ──────────────────────────────────────── */
 .profile-card{
@@ -441,7 +443,7 @@ a{text-decoration:none;color:inherit}
 
 /* ─── EMPTY STATE ──────────────────────────────────────────── */
 .empty-state{text-align:center;padding:40px 20px;color:var(--t3)}
-.empty-state .es-icon{font-size:40px;margin-bottom:12px;opacity:0.5}
+.empty-state .es-icon{margin-bottom:12px;display:flex;justify-content:center}
 .empty-state .es-text{font-size:14px;line-height:1.6}
 
 /* ─── TOAST ────────────────────────────────────────────────── */
@@ -550,7 +552,7 @@ a{text-decoration:none;color:inherit}
       <div class="chip" data-filter="savings">저축</div>
     </div>
     <div class="scroll-area" id="searchResults">
-      <div class="search-hint"><div class="hint-icon">🔍</div>거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>
+      <div class="search-hint">거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>
     </div>
   </div>
 
@@ -560,14 +562,13 @@ a{text-decoration:none;color:inherit}
     <div class="scroll-area">
       <div class="section-title">설정</div>
       <div class="settings-group">
-        <div class="settings-row" id="openRecurring"><div class="settings-icon" style="background:rgba(49,130,246,0.12)">🔄</div><div class="settings-label">반복 거래 관리</div><div class="settings-right"><span class="chev">›</span></div></div>
-        <div class="settings-row" id="openCatMgr"><div class="settings-icon" style="background:rgba(49,130,246,0.10)">🏷️</div><div class="settings-label">카테고리 관리</div><div class="settings-right"><span class="chev">›</span></div></div>
+        <div class="settings-row" id="openCatMgr"><div class="settings-icon" style="background:rgba(49,130,246,0.10);color:#3182F6"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg></div><div class="settings-label">카테고리 관리</div><div class="settings-right"><span class="chev">›</span></div></div>
       </div>
       <div class="section-title">데이터 관리</div>
       <div class="settings-group">
-        <div class="settings-row" id="exportCsv"><div class="settings-icon" style="background:rgba(49,130,246,0.10)">📤</div><div class="settings-label">CSV 내보내기</div><div class="settings-right"><span class="chev">›</span></div></div>
-        <div class="settings-row" id="openImport"><div class="settings-icon" style="background:rgba(0,180,147,0.10)">📥</div><div class="settings-label">CSV 가져오기</div><div class="settings-right"><span class="chev">›</span></div></div>
-        <div class="settings-row danger" id="resetData"><div class="settings-icon">🗑️</div><div class="settings-label">데이터 초기화</div><div class="settings-right"><span class="chev">›</span></div></div>
+        <div class="settings-row" id="exportCsv"><div class="settings-icon" style="background:rgba(49,130,246,0.10);color:#3182F6"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10V2M5 7l3 3 3-3"/><path d="M2 12v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1"/></svg></div><div class="settings-label">CSV 내보내기</div><div class="settings-right"><span class="chev">›</span></div></div>
+        <div class="settings-row" id="openImport"><div class="settings-icon" style="background:rgba(0,180,147,0.10);color:#00B493"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M2 12v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1"/></svg></div><div class="settings-label">CSV 가져오기</div><div class="settings-right"><span class="chev">›</span></div></div>
+        <div class="settings-row danger" id="resetData"><div class="settings-icon" style="background:rgba(240,68,82,0.10);color:#F04452"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,4 14,4"/><path d="M6 4V2h4v2M5 4l.7 9h4.6l.7-9"/></svg></div><div class="settings-label">데이터 초기화</div><div class="settings-right"><span class="chev">›</span></div></div>
       </div>
       <div style="text-align:center;padding:20px;font-size:11px;color:var(--t4)">내 가계부 v2.0</div>
     </div>
@@ -644,21 +645,21 @@ a{text-decoration:none;color:inherit}
         <div class="kkey" data-k="1">1</div><div class="kkey" data-k="2">2</div><div class="kkey" data-k="3">3</div>
         <div class="kkey" data-k="4">4</div><div class="kkey" data-k="5">5</div><div class="kkey" data-k="6">6</div>
         <div class="kkey" data-k="7">7</div><div class="kkey" data-k="8">8</div><div class="kkey" data-k="9">9</div>
-        <div class="kkey clr" data-k="C">C</div><div class="kkey" data-k="0">0</div><div class="kkey del" data-k="DEL">⌫</div>
+        <div class="kkey clr" data-k="C">C</div><div class="kkey" data-k="0">0</div><div class="kkey del" data-k="DEL"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7L2 9z"/><line x1="11" y1="6" x2="8" y2="12"/><line x1="8" y1="6" x2="11" y2="12"/></svg></div>
       </div>
       <div class="detail-rows" id="addDetailRows">
         <div class="detail-row" id="drCategory">
-          <div class="dr-icon" id="drCatIcon" style="background:rgba(49,130,246,0.12)">🍽️</div>
+          
           <div class="dr-label">카테고리</div>
           <div class="dr-value"><span id="drCatVal">식비</span><span class="dr-chevron">›</span></div>
         </div>
         <div class="detail-row" id="drDate">
-          <div class="dr-icon" style="background:rgba(49,130,246,0.12)">📅</div>
+          
           <div class="dr-label">날짜</div>
           <div class="dr-value"><input type="date" id="addDate" style="border:none;background:none;font-size:14px;color:var(--t2);text-align:right;font-family:inherit;cursor:pointer"><span class="dr-chevron"></span></div>
         </div>
         <div class="detail-row" id="drPayment">
-          <div class="dr-icon" style="background:rgba(255,109,0,0.12)">💳</div>
+          
           <div class="dr-label">결제 수단</div>
           <div class="dr-value">
             <select id="addPayment" style="border:none;background:none;font-size:14px;color:var(--t2);font-family:inherit;cursor:pointer;text-align:right">
@@ -669,7 +670,7 @@ a{text-decoration:none;color:inherit}
           </div>
         </div>
         <div class="detail-row" id="drMemo">
-          <div class="dr-icon" style="background:rgba(107,118,132,0.12)">📝</div>
+          
           <div class="dr-label">메모</div>
           <div class="dr-value" style="flex:1;justify-content:flex-end">
             <input type="text" id="addMemo" placeholder="선택 사항" style="border:none;background:none;font-size:14px;color:var(--t2);text-align:right;font-family:inherit;width:100%">
@@ -735,7 +736,7 @@ a{text-decoration:none;color:inherit}
         <div class="kkey" data-k="1">1</div><div class="kkey" data-k="2">2</div><div class="kkey" data-k="3">3</div>
         <div class="kkey" data-k="4">4</div><div class="kkey" data-k="5">5</div><div class="kkey" data-k="6">6</div>
         <div class="kkey" data-k="7">7</div><div class="kkey" data-k="8">8</div><div class="kkey" data-k="9">9</div>
-        <div class="kkey clr" data-k="C">C</div><div class="kkey" data-k="0">0</div><div class="kkey del" data-k="DEL">⌫</div>
+        <div class="kkey clr" data-k="C">C</div><div class="kkey" data-k="0">0</div><div class="kkey del" data-k="DEL"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7L2 9z"/><line x1="11" y1="6" x2="8" y2="12"/><line x1="8" y1="6" x2="11" y2="12"/></svg></div>
       </div>
       <button class="submit-btn" id="budgetEditSave" style="margin-top:4px">저장하기</button>
     </div>
@@ -875,11 +876,15 @@ const CATS = {
   fixed_expense:['고정비용','교통/차량','의료비','구독','기타'],
   savings:['저축']
 };
-const CAT_EMOJI = {
-  '식비':'🍽️','쇼핑':'🛍️','생필품':'🛒','문화':'🎬','주유비':'⛽',
-  '교통/차량':'🚗','의료비':'💊','경조사/선물':'🎁','여행':'✈️','숙박':'🏨',
-  '기타':'📌','급여':'💰','투자수익':'📈','고정비용':'🔒','구독':'📱','저축':'🏦'
-};
+// CAT_EMOJI 제거 — 색상 도형으로 대체
+// catIcon(color): 카테고리 아이콘용 SVG 원형 도형 반환
+function catDotSVG(color){
+  return `<svg width="16" height="16" viewBox="0 0 16 16" style="flex-shrink:0;display:block"><circle cx="8" cy="8" r="6" fill="${color}"/></svg>`;
+}
+function catIconBox(color, size=36){
+  const r = size/2;
+  return `<div style="width:${size}px;height:${size}px;border-radius:${size*0.28}px;background:${color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="${size*0.44}" height="${size*0.44}" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="${color}"/></svg></div>`;
+}
 const CAT_COLOR = {
   '식비':'#FF6B6B','쇼핑':'#FF9F43','생필품':'#FFC947','문화':'#A29BFE',
   '주유비':'#6C5CE7','교통/차량':'#74B9FF','의료비':'#55EFC4','경조사/선물':'#FD79A8',
@@ -1123,7 +1128,7 @@ function switchTab(tab) {
     searchFilter='all';
     document.querySelectorAll('#filterChips .chip').forEach(c=>c.classList.remove('active'));
     document.querySelector('#filterChips .chip[data-filter="all"]').classList.add('active');
-    document.getElementById('searchResults').innerHTML='<div class="search-hint"><div class="hint-icon">🔍</div>거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>';
+    document.getElementById('searchResults').innerHTML='<div class="search-hint">거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>';
   }
   document.querySelector(`.tab-item[data-tab="${currentTab}"]`).classList.remove('active');
   document.getElementById(screens[currentTab]).classList.add('hidden');
@@ -1219,12 +1224,15 @@ function renderCal(){
     const dayTx=txs.filter(t=>t.date===ds);
     if(dayTx.length){
       const inc=dayTx.filter(t=>t.type==='income').reduce((s,t)=>s+Number(t.amount),0);
-      const exp=dayTx.filter(t=>t.type==='expense'||t.type==='fixed_expense').reduce((s,t)=>s+Number(t.amount),0);
+      const exp=dayTx.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+      const fix=dayTx.filter(t=>t.type==='fixed_expense').reduce((s,t)=>s+Number(t.amount),0);
       const sav=dayTx.filter(t=>t.type==='savings').reduce((s,t)=>s+Number(t.amount),0);
-      const am=document.createElement('div');am.className='cal-amounts';
+      const typeCount=[inc,exp,fix,sav].filter(v=>v>0).length;
+      const am=document.createElement('div');am.className='cal-amounts'+(typeCount===4?' small':'');
+      if(inc){const s=document.createElement('div');s.className='ca-inc';s.textContent='+'+shortNum(inc);am.appendChild(s);}
       if(exp){const s=document.createElement('div');s.className='ca-exp';s.textContent='-'+shortNum(exp);am.appendChild(s);}
-      if(inc&&!exp){const s=document.createElement('div');s.className='ca-inc';s.textContent='+'+shortNum(inc);am.appendChild(s);}
-      if(sav&&!exp&&!inc){const s=document.createElement('div');s.className='ca-sav';s.textContent=shortNum(sav);am.appendChild(s);}
+      if(fix){const s=document.createElement('div');s.className='ca-fix';s.textContent='-'+shortNum(fix);am.appendChild(s);}
+      if(sav){const s=document.createElement('div');s.className='ca-sav';s.textContent=shortNum(sav);am.appendChild(s);}
       c.appendChild(am);
     }
     let tX=0,tY=0,tM=false;
@@ -1277,7 +1285,7 @@ function refreshDaySheet(){
 function renderTxList(container, list, dateStr=null){
   container.innerHTML='';
   const sorted = [...list].sort((a,b)=>a.date.localeCompare(b.date));
-  if(!sorted.length){container.innerHTML='<div class="empty-state"><div class="es-icon">📭</div><div class="es-text">거래 내역이 없습니다</div></div>';return;}
+  if(!sorted.length){container.innerHTML='<div class="empty-state"><div class="es-text">거래 내역이 없습니다</div></div>';return;}
   let openedRow=null;
   sorted.forEach(t=>{
     const wrap=document.createElement('div'); wrap.className='tx-wrap';
@@ -1286,10 +1294,8 @@ function renderTxList(container, list, dateStr=null){
     const delBtn=document.createElement('div');delBtn.className='tx-act del';delBtn.textContent='삭제';
     bg.appendChild(editBtn);bg.appendChild(delBtn);wrap.appendChild(bg);
     const row=document.createElement('div');row.className='tx-row';
-    const catColor=CAT_COLOR[t.category]||'#B2BEC3';
-    const catEmoji=CAT_EMOJI[t.category]||'📌';
     const amtStr=(t.type==='income'?'+':t.type==='savings'?'':'-')+fmt(t.amount);
-    row.innerHTML=`<div class="tx-icon" style="background:${catColor}22">${catEmoji}</div><div class="tx-info"><div class="tx-name">${t.memo||TYPE_NAMES[t.type]}</div><div class="tx-sub">${t.category||TYPE_NAMES[t.type]} · ${t.date.slice(5).replace('-','/')} · ${t.payment_method==='card'?'카드':t.payment_method==='transfer'?'계좌이체':'현금'}</div></div><div class="tx-amount ${t.type}">${amtStr}</div>`;
+    row.innerHTML=`<div class="tx-info"><div class="tx-name">${t.memo||TYPE_NAMES[t.type]}</div><div class="tx-sub">${t.category||TYPE_NAMES[t.type]}</div></div><div class="tx-amount ${t.type}">${amtStr}</div>`;
     wrap.appendChild(row);
     editBtn.addEventListener('click',()=>{ resetSwipe(); openAddSheet(t, dateStr); });
     delBtn.addEventListener('click',async()=>{
@@ -1376,12 +1382,12 @@ function updateCatUI(){
   if(!addCat){
     document.getElementById('drCatVal').textContent='선택';
     document.getElementById('drCatVal').style.color='var(--t4)';
-    document.getElementById('drCatIcon').textContent='📋';
+    // icon removed
     document.getElementById('drCatIcon').style.background='var(--bg2)';
   } else {
     document.getElementById('drCatVal').textContent=addCat;
     document.getElementById('drCatVal').style.color='var(--t2)';
-    document.getElementById('drCatIcon').textContent=CAT_EMOJI[addCat]||'📌';
+    // icon removed
     document.getElementById('drCatIcon').style.background=(CAT_COLOR[addCat]||'#ccc')+'22';
   }
 }
@@ -1407,8 +1413,8 @@ function openCatPicker(){
   const list=document.getElementById('catList'); list.innerHTML='';
   cats.forEach(cat=>{
     const row=document.createElement('div'); row.className='cat-row';
-    const color=CAT_COLOR[cat]||'#ccc'; const emoji=CAT_EMOJI[cat]||'📌';
-    row.innerHTML=`<div class="cat-icon-box" style="background:${color}22">${emoji}</div><div class="cat-name">${cat}</div>${cat===addCat?'<span class="cat-check">✓</span>':''}`;
+    const color=CAT_COLOR[cat]||'#ccc';
+    row.innerHTML=`<div class="cat-name">${cat}</div>${cat===addCat?'<span class="cat-check" style="color:var(--blue);font-size:16px;font-weight:600">✓</span>':''}`;
     row.addEventListener('click',()=>{addCat=cat;updateCatUI();closeSheet('catSheet');});
     list.appendChild(row);
   });
@@ -1528,10 +1534,10 @@ function renderStats(){
     html+=`<div class="card" style="margin:0 16px 12px"><div style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:14px">카테고리별 지출</div>`;
     catSorted.forEach(([cat,amt])=>{
       const pct=Math.round(amt/totalExp*100);
-      const color=CAT_COLOR[cat]||'#ccc'; const emoji=CAT_EMOJI[cat]||'📌';
+      const color=CAT_COLOR[cat]||'#ccc';
       html+=`<div class="stat-row-item" onclick="openCatDetail('${cat}',${statsYear},${statsMonth})" style="cursor:pointer">
         <div style="display:grid;grid-template-columns:1fr 38px 96px;align-items:center;gap:4px;margin-bottom:7px">
-          <div style="font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${emoji} ${cat}</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${cat}</div>
           <div style="font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-light);padding:2px 0;border-radius:8px;text-align:center;white-space:nowrap">${pct}%</div>
           <div style="font-size:13px;font-weight:600;color:var(--t2);text-align:right;white-space:nowrap">${fmt(amt)}</div>
         </div>
@@ -1540,7 +1546,7 @@ function renderStats(){
     });
     html+=`<div style="text-align:right;font-size:12px;color:var(--t2);margin-top:12px;padding-top:12px;border-top:1px solid var(--bg2)">총 지출 합계: <b style="color:var(--red)">${fmt(totalExp)}</b></div></div>`;
   }
-  if(!catSorted.length&&totalInc===0&&totalSav===0) html+=`<div class="empty-state"><div class="es-icon">📊</div><div class="es-text">이번 달 데이터가 없습니다</div></div>`;
+  if(!catSorted.length&&totalInc===0&&totalSav===0) html+=`<div class="empty-state"><div class="es-text">이번 달 데이터가 없습니다</div></div>`;
   cont.innerHTML=html;
 }
 
@@ -1571,7 +1577,7 @@ document.getElementById('searchInput').addEventListener('input',()=>{
 function renderSearch(){
   const q=document.getElementById('searchInput').value.trim();
   const res=document.getElementById('searchResults');
-  if(!q){res.innerHTML='<div class="search-hint"><div class="hint-icon">🔍</div>거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>';return;}
+  if(!q){res.innerHTML='<div class="search-hint">거래를 검색해보세요<br><span style="font-size:12px;color:var(--t4)">카테고리, 메모, 거래 유형으로 검색</span></div>';return;}
   let found=txs.filter(t=>(t.memo||'').includes(q)||(t.category||'').includes(q)||TYPE_NAMES[t.type].includes(q));
   if(searchFilter!=='all') found=found.filter(t=>t.type===searchFilter);
   if(!found.length){res.innerHTML=`<div class="search-empty">"${q}"에 대한 검색 결과가 없습니다</div>`;return;}
@@ -1610,7 +1616,7 @@ function renderBudgetContent(){
     const pColor=ratio>=1?'var(--red)':ratio>=0.8?'var(--orange)':'var(--blue)';
     html+=`<div class="budget-total-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:13px;font-weight:600;color:var(--t2)">전체 예산</span><span style="font-size:11px;font-weight:700;color:${pColor}">${ratio>=1?'초과':'남은 '+fmt(Math.max(0,totalBudget.limit-totalSpent))}</span></div><div style="font-size:22px;font-weight:700;color:var(--t1)">${fmt(totalSpent)} <span style="font-size:14px;font-weight:500;color:var(--t3)">/ ${fmt(totalBudget.limit)}</span></div><div class="budget-progress-bar"><div class="budget-fill" style="background:${pColor};width:${ratio*100}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3)"><span>${INT(ratio*100)}% 사용</span><button onclick="editBudgetFor(null,'${mk}')" style="color:var(--blue);font-size:11px;font-weight:600">수정</button></div></div>`;
   }else{
-    html+=`<div style="background:var(--blue-light);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;cursor:pointer;display:flex;align-items:center;gap:12px" onclick="editBudgetFor(null,'${mk}')"><span style="font-size:28px">💡</span><div><div style="font-size:14px;font-weight:700;color:var(--t1)">전체 예산 설정하기</div><div style="font-size:12px;color:var(--t2);margin-top:2px">월별 지출 한도를 설정해보세요</div></div></div>`;
+    html+=`<div style="background:var(--blue-light);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;cursor:pointer;display:flex;align-items:center;gap:12px" onclick="editBudgetFor(null,'${mk}')"><div><div style="font-size:14px;font-weight:700;color:var(--t1)">전체 예산 설정하기</div><div style="font-size:12px;color:var(--t2);margin-top:2px">월별 지출 한도를 설정해보세요</div></div></div>`;
   }
   // Category budgets
   const catBudgets=budgets.filter(b=>b.cat!=='total'&&b.month===mk);
@@ -1620,8 +1626,7 @@ function renderBudgetContent(){
       const spent=mt.filter(t=>t.category===b.cat).reduce((s,t)=>s+Number(t.amount),0);
       const ratio=Math.min(1,spent/b.limit);
       const pColor=ratio>=1?'var(--red)':ratio>=0.8?'var(--orange)':'var(--blue)';
-      const emoji=CAT_EMOJI[b.cat]||'📌';
-      html+=`<div class="budget-cat-row"><div style="width:36px;height:36px;border-radius:10px;background:${(CAT_COLOR[b.cat]||'#ccc')}22;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${emoji}</div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600;color:var(--t1)">${b.cat}</span><span style="font-size:12px;color:var(--t2)">${fmt(spent)} / ${fmt(b.limit)}</span></div><div style="height:5px;background:var(--bg3);border-radius:3px"><div style="height:100%;background:${pColor};border-radius:3px;width:${ratio*100}%"></div></div></div><button onclick="editBudgetFor('${b.cat}','${mk}')" style="color:var(--blue);font-size:12px;font-weight:600;padding:4px 8px;flex-shrink:0">수정</button></div>`;
+      html+=`<div class="budget-cat-row"><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600;color:var(--t1)">${b.cat}</span><span style="font-size:12px;color:var(--t2)">${fmt(spent)} / ${fmt(b.limit)}</span></div><div style="height:5px;background:var(--bg3);border-radius:3px"><div style="height:100%;background:${pColor};border-radius:3px;width:${ratio*100}%"></div></div></div><button onclick="editBudgetFor('${b.cat}','${mk}')" style="color:var(--blue);font-size:12px;font-weight:600;padding:4px 8px;flex-shrink:0">수정</button></div>`;
     });
     html+=`</div>`;
   }
@@ -1665,20 +1670,19 @@ document.getElementById('budgetEditSave').addEventListener('click',()=>{
 // ═══════════════════════════════════════════════════════════
 // RECURRING
 // ═══════════════════════════════════════════════════════════
-document.getElementById('openRecurring').addEventListener('click',()=>{renderRecurring();openSheet('recurringSheet');});
 function renderRecurring(){
   const cont=document.getElementById('recurringContent');
   // Due today
   const dueToday=recurringList.filter(r=>r.active&&isDueToday(r));
   let html='';
   if(dueToday.length){
-    html+=`<div class="due-banner"><div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px;display:flex;align-items:center;gap:6px">⚠️ 오늘 적용할 반복 거래</div>`;
+    html+=`<div class="due-banner"><div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">오늘 적용할 반복 거래</div>`;
     dueToday.forEach(r=>{html+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px;color:var(--t1)">${r.memo||r.category}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:700;color:${COLORS[r.type]}">${fmt(r.amount)}</span><button onclick="applyRecurring('${r.id}')" style="background:var(--blue);color:#fff;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:600">적용</button></div></div>`;});
     html+=`</div>`;
   }
-  if(!recurringList.length) html+=`<div class="empty-state"><div class="es-icon">🔄</div><div class="es-text">등록된 반복 거래가 없습니다</div></div>`;
+  if(!recurringList.length) html+=`<div class="empty-state"><div class="es-text">등록된 반복 거래가 없습니다</div></div>`;
   recurringList.forEach(r=>{
-    const emoji=CAT_EMOJI[r.category]||'📌';
+
     const freqMap={daily:'매일',weekly:'매주',monthly:'매월',yearly:'매년'};
     html+=`<div class="recurring-row"><div style="width:42px;height:42px;border-radius:12px;background:${(CAT_COLOR[r.category]||'#ccc')}22;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;opacity:${r.active?1:0.5}">${emoji}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;color:${r.active?'var(--t1)':'var(--t3)'}">${r.memo||r.category}</div><div style="display:flex;gap:6px;margin-top:3px"><span style="font-size:10px;font-weight:600;background:var(--bg2);color:var(--t3);padding:1px 6px;border-radius:4px">${freqMap[r.frequency]||r.frequency}</span></div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:${r.active?COLORS[r.type]:'var(--t3)'}">${fmt(r.amount)}</div></div><div class="toggle ${r.active?'on':''}" onclick="toggleRecurring('${r.id}')"></div><button onclick="deleteRecurring('${r.id}')" style="color:var(--red);font-size:18px;padding:4px 6px">×</button></div>`;
   });
@@ -1752,18 +1756,18 @@ function renderCatMgrSheet(){
 
   // ── Hint ──
   html+=`<div style="font-size:11px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:6px">
-    <span style="font-size:13px">⠿</span> 핸들을 드래그해 순서 변경 &nbsp;·&nbsp; <span style="color:var(--red);font-size:14px">×</span> 삭제
+    <svg width="12" height="12" viewBox="0 0 12 12" style="opacity:0.4"><line x1="1" y1="3" x2="11" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="9" x2="11" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> 핸들을 드래그해 순서 변경 &nbsp;·&nbsp; <span style="color:var(--red);font-size:14px">×</span> 삭제
   </div>`;
 
   // ── Sortable list ──
   const cats = CATS[editingCatType]||[];
   html+=`<div id="catEditList" style="display:flex;flex-direction:column;gap:6px">`;
   cats.forEach((cat,i)=>{
-    const color=CAT_COLOR[cat]||'#ccc'; const emoji=CAT_EMOJI[cat]||'📌';
+    const color=CAT_COLOR[cat]||'#ccc';
     html+=`<div class="cat-sort-item" data-idx="${i}"
       style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg2);border-radius:var(--r-md);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:box-shadow 0.15s,opacity 0.15s">
-      <div class="cat-drag-handle" style="font-size:16px;color:var(--t4);padding:2px 6px;cursor:grab;flex-shrink:0;line-height:1">⠿</div>
-      <div style="width:36px;height:36px;border-radius:10px;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${emoji}</div>
+      <div class="cat-drag-handle" style="padding:2px 8px;cursor:grab;flex-shrink:0;color:var(--t4);display:flex;align-items:center"><svg width="12" height="12" viewBox="0 0 12 12"><line x1="1" y1="3" x2="11" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="9" x2="11" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+
       <div style="flex:1;font-size:14px;font-weight:500;color:var(--t1)">${cat}</div>
       <button onclick="deleteCatFromType('${editingCatType}',${i})"
         style="color:var(--red);font-size:20px;padding:4px 8px;font-weight:300;line-height:1;flex-shrink:0">×</button>
