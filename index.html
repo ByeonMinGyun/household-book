@@ -53,7 +53,7 @@ a{text-decoration:none;color:inherit}
 #tabBar{
   position:absolute;bottom:0;left:0;right:0;
   background:var(--card);border-top:1px solid var(--border);
-  display:flex;padding-bottom:calc(var(--safe-bot) + 8px);padding-top:2px;z-index:50;flex-shrink:0;
+  display:flex;padding-bottom:calc(var(--safe-bot) + 16px);padding-top:8px;z-index:50;flex-shrink:0;
 }
 .tab-item{
   flex:1;display:flex;flex-direction:column;align-items:center;
@@ -65,7 +65,7 @@ a{text-decoration:none;color:inherit}
 .tab-item.active span{color:var(--blue)}
 
 /* ─── SCROLLABLE CONTENT AREA ──────────────────────────────── */
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bot) + 100px)}
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--safe-bot) + 110px)}
 .scroll-area::-webkit-scrollbar{display:none}
 
 /* ─── CARDS ────────────────────────────────────────────────── */
@@ -88,7 +88,7 @@ a{text-decoration:none;color:inherit}
 
 /* ─── HOME SCREEN ──────────────────────────────────────────── */
 #homeHeader{
-  padding:calc(var(--safe-top) + 12px) 20px 10px;
+  padding:calc(var(--safe-top) + 6px) 20px 8px;
   display:flex;align-items:center;justify-content:space-between;
   background:var(--bg);flex-shrink:0;
 }
@@ -485,7 +485,7 @@ a{text-decoration:none;color:inherit}
 <div id="app"><!-- ── MAIN APP ─────────────────────────────────── -->
 
   <!-- HOME TAB -->
-  <div class="screen" id="homeScreen" style="padding-bottom:calc(var(--safe-bot) + 62px)">
+  <div class="screen" id="homeScreen" style="padding-bottom:calc(var(--safe-bot) + 76px)">
     <div id="homeHeader">
       <div class="month-nav">
         <button class="month-nav-btn" id="prevMonth">‹</button>
@@ -603,14 +603,23 @@ a{text-decoration:none;color:inherit}
   <!-- ── SHEETS ────────────────────────────────────── -->
 
   <!-- Day Detail Sheet -->
-  <div class="sheet" id="daySheet" style="z-index:70">
+  <div class="sheet" id="daySheet" style="z-index:70;position:fixed">
     <div class="sheet-handle-row"><div class="sheet-handle"></div></div>
     <div class="sheet-title-row">
       <div class="sheet-title" id="daySheetTitle">날짜 내역</div>
       <button class="sheet-close" id="daySheetClose">×</button>
     </div>
     <div id="daySheetSummary" style="padding:0 20px 12px;flex-shrink:0"></div>
-    <div class="sheet-scroll" id="daySheetList"></div>
+    <div class="sheet-scroll" id="daySheetList" style="padding-bottom:80px"></div>
+    <!-- 날짜별 FAB -->
+    <button id="daySheetFab" style="
+      position:absolute;right:20px;bottom:20px;
+      width:50px;height:50px;border-radius:50%;
+      background:var(--blue);color:#fff;font-size:24px;font-weight:300;
+      box-shadow:0 4px 16px rgba(49,130,246,0.4);
+      display:flex;align-items:center;justify-content:center;
+      z-index:5;transition:transform 0.15s;
+    ">+</button>
   </div>
 
   <!-- Add/Edit Transaction Sheet -->
@@ -1107,6 +1116,9 @@ document.querySelectorAll('.sheet').forEach(sheet=>{
 });
 
 // Close buttons
+document.getElementById('daySheetFab').addEventListener('click',()=>{
+  if(activeDayDate) openAddSheet(null, activeDayDate);
+});
 ['daySheetClose','addSheetClose','catSheetClose','typeDetailClose',
  'monthPickerClose','budgetSheetClose','budgetEditClose','recurringSheetClose',
  'addRecurringClose','importSheetClose'].forEach(id=>{
@@ -1164,7 +1176,7 @@ document.getElementById('calCard').addEventListener('touchmove',()=>swMoved=true
 document.getElementById('calCard').addEventListener('touchend',e=>{
   if(!swMoved||openSheets.length) return;
   const dx=e.changedTouches[0].clientX-swX;
-  if(Math.abs(dx)>50&&Math.abs(e.changedTouches[0].clientY-swY)<40){
+  if(Math.abs(dx)>70&&Math.abs(e.changedTouches[0].clientY-swY)<30){
     if(dx<0) nextMonth(); else prevMonth();
   }
 });
@@ -1237,8 +1249,8 @@ function renderCal(){
     }
     let tX=0,tY=0,tM=false;
     c.addEventListener('touchstart',e=>{tX=e.touches[0].clientX;tY=e.touches[0].clientY;tM=false;},{passive:true});
-    c.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientX-tX)>10||Math.abs(e.touches[0].clientY-tY)>10)tM=true;},{passive:true});
-    c.addEventListener('touchend',e=>{if(!tM){e.preventDefault();openDaySheet(ds,dayTx);}},{passive:false});
+    c.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientX-tX)>16||Math.abs(e.touches[0].clientY-tY)>16)tM=true;},{passive:true});
+    c.addEventListener('touchend',e=>{if(!tM&&!swMoved){e.preventDefault();openDaySheet(ds,dayTx);}},{passive:false});
     c.addEventListener('click',()=>openDaySheet(ds,dayTx));
     g.appendChild(c);
   }
@@ -1303,7 +1315,10 @@ function renderTxList(container, list, dateStr=null){
       try{ await deleteTx(t.id); renderHome(); if(dateStr) refreshDaySheet(); showToast('삭제되었습니다'); }
       catch(e){ showToast('삭제 실패'); }
     });
-    row.addEventListener('click',()=>{ if(row._open){resetSwipe();}else{openAddSheet(t,dateStr);} });
+    row.addEventListener('click',e=>{ 
+      if(row._dragged){row._dragged=false;return;} // 드래그 후 click 무시
+      if(row._open){resetSwipe();}else{openAddSheet(t,dateStr);} 
+    });
     // Swipe
     let sx=0,dx=0,swiping=false,itemOpen=false;
     function resetSwipe(){row.style.transform='';openedRow=null;row._open=false;itemOpen=false;}
@@ -1313,7 +1328,9 @@ function renderTxList(container, list, dateStr=null){
     },{passive:true});
     row.addEventListener('touchmove',e=>{
       const curDx=e.touches[0].clientX-sx;
-      if(!swiping&&Math.abs(e.touches[0].clientY-e.touches[0].clientY)>10)return;
+      const curDy=Math.abs(e.touches[0].clientY-sx); // unused but kept
+      if(!swiping&&Math.abs(curDx)<8)return; // 8px 미만이면 스와이프 시작 안 함
+      if(!swiping&&Math.abs(e.touches[0].clientY-(e.touches[0].clientY))>10)return;
       swiping=true;
       dx=Math.max(-144,Math.min(0,itemOpen?curDx-144:curDx));
       row.style.transform=`translateX(${dx}px)`;
@@ -1321,9 +1338,10 @@ function renderTxList(container, list, dateStr=null){
     row.addEventListener('touchend',()=>{
       row.style.transition='transform 0.25s ease';
       if(swiping){
+        row._dragged=true; // 드래그가 일어났음을 표시 → click 무시
         if(dx<-72){row.style.transform='translateX(-144px)';openedRow=row;row._open=true;itemOpen=true;}
         else{resetSwipe();}
-      } else if(itemOpen){resetSwipe();}
+      } else if(itemOpen){row._dragged=true;resetSwipe();}
       swiping=false;
     },{passive:true});
     container.appendChild(wrap);
@@ -1382,13 +1400,9 @@ function updateCatUI(){
   if(!addCat){
     document.getElementById('drCatVal').textContent='선택';
     document.getElementById('drCatVal').style.color='var(--t4)';
-    // icon removed
-    document.getElementById('drCatIcon').style.background='var(--bg2)';
   } else {
     document.getElementById('drCatVal').textContent=addCat;
     document.getElementById('drCatVal').style.color='var(--t2)';
-    // icon removed
-    document.getElementById('drCatIcon').style.background=(CAT_COLOR[addCat]||'#ccc')+'22';
   }
 }
 document.querySelectorAll('#typeSelector .type-btn').forEach(btn=>{
